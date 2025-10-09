@@ -1,5 +1,5 @@
 FROM ghcr.io/xtls/xray-core:latest
 
-ADD ./config.json /usr/local/etc/xray/config.json
+ADD ./config.json /etc/xray/config.json
 
-ENTRYPOINT [ "/usr/local/bin/xray","-confdir", "/usr/local/etc/xray/"]
+ENTRYPOINT [ "/usr/local/bin/xray","-confdir", "/etc/xray/"]
