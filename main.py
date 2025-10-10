@@ -1,5 +1,10 @@
 from json import dump
-from os import environ
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("client_id", help="Client ID for Xray configuration")
+args = parser.parse_args()
 
 xray_conf = {
     "inbounds": [
@@ -7,7 +12,7 @@ xray_conf = {
             "port": 80,
             "listen": "0.0.0.0",
             "protocol": "vless",
-            "settings": {"clients": [{"id": environ.get("CLIENT_ID")}], "decryption": "none"},
+            "settings": {"clients": [{"id": args.client_id}], "decryption": "none"},
             "streamSettings": {"network": "xhttp", "security": "none"},
             "xhttpSettings": {"path": "/", "mode": "stream-up"},
         }
