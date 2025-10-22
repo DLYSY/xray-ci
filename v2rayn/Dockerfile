@@ -4,9 +4,7 @@ COPY ./v2rayN-linux-64/ /app
 
 COPY startapp.sh /startapp.sh
 
-ENV LANG=zh_CN.UTF-8
-    APP_NAME=v2rayN
-    KEEP_APP_RUNNING = 1
+ENV LANG=zh_CN.UTF-8 APP_NAME=v2rayN KEEP_APP_RUNNING=1
 
 RUN chmod +x /app/v2rayN && \
     chmod +x /startapp.sh && \
