@@ -4,6 +4,7 @@ from os import environ,_exit
 client_id = environ.get("CLIENT_ID")
 
 if client_id is None:
+    print("缺失uuid")
     _exit(1)
 
 xray_conf = {
