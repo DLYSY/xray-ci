@@ -1,5 +1,9 @@
 FROM teddysun/xray:latest
 
-ADD ./config.json /etc/xray/config.json
+RUN apk add python3
 
-ENTRYPOINT [ "/usr/bin/xray","-confdir", "/etc/xray"]
+ADD ./generate_config.py /app/generate_config.py
+
+WORKDIR /app
+
+ENTRYPOINT ["/usr/bin/python", "/app/generate_config.py", "&&", "/usr/bin/xray", "-confdir", "/etc/xray"]

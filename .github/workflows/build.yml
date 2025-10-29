@@ -13,44 +13,19 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
-    - name: Generat Config
-      shell: python
-      working-directory: ./xray
-      run: |
-        from json import dump
-        xray_conf = {
-            "inbounds": [
-                {
-                    "port": 80,
-                    "listen": "0.0.0.0",
-                    "protocol": "vless",
-                    "settings": {"clients": [{"id": "${{ secrets.CLIENT_ID }}"}], "decryption": "none"},
-                    "streamSettings": {"network": "xhttp", "security": "none"},
-                    "xhttpSettings": {"path": "/", "mode": "stream-up"},
-                }
-            ],
-            "outbounds": [{"protocol": "freedom"}],
-        }
-        with open("config.json", "w") as f:
-            dump(xray_conf, f)
-
-    # - name: Generat Config
-    #   run: python3 ./generage_config.py ${{ secrets.CLIENT_ID }}
-    #   working-directory: ./xray
-
     - name: Build Docker Image
-      run: docker build -t ${{ secrets.ACR_URL }}/lysy-self/xray:xhttp .
+      run: docker build -t quay.io/dlysy/xray:cloud .
       working-directory: ./xray
 
-    - name: ACR login
+    - name: Quay login
       uses: docker/login-action@v2
       with:
-        registry: ${{ secrets.ACR_URL }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
+        registry: quay.io
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_PASSWORD }}
 
-    - name: Push to ACR
-      run: docker push ${{ secrets.ACR_URL }}/lysy-self/xray:xhttp
+    - name: Push to Quay
+      run: docker push quay.io/dlysy/xray:cloud
 
   build-v2rayn:
     runs-on: ubuntu-latest
@@ -72,10 +47,6 @@ jobs:
 
         with zipfile.ZipFile("v2rayn.zip","r") as f:
             f.extractall(".")
-      
-    # - name: Generat Config
-    #   run: python ./download_v2rayn.py
-    #   working-directory: ./v2rayn
 
     - name: Build Docker Image
       run: docker build -t quay.io/dlysy/v2rayn:web .
