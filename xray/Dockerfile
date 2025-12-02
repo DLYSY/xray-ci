@@ -1,8 +1,8 @@
-FROM scratch
+FROM busybox
 
-ADD ./target/x86_64-unknown-linux-musl/release/xray-init /xray-init
-ADD ./xray /xray
+ADD ./target/x86_64-unknown-linux-musl/release/xray-init /app/xray-init
+ADD ./xray /app/xray
 
-WORKDIR /
+WORKDIR /app
 
-CMD ["/xray-init"]
+CMD ["/app/xray-init"]

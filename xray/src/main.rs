@@ -17,10 +17,10 @@ fn main() -> Result<(), String> {
         "outbounds": [{"protocol": "freedom"}],
     });
 
-    fs::write("/config.json", j.to_string()).map_err(|_|{"无法写入config.json".to_string()})?;
+    fs::write("/app/config.json", j.to_string()).map_err(|_|{"无法写入config.json".to_string()})?;
 
-    let error = Command::new("/xray")
-        .args(["run", "-c", "/config.json"])
+    let error = Command::new("/app/xray")
+        .args(["run", "-c", "/app/config.json"])
         .exec();
 
     Err(format!("无法启动主程序:{}", error))
