@@ -41,6 +41,10 @@ jobs:
         with zipfile.ZipFile("Xray-linux-64.zip","r") as f:
             f.extractall(".")
 
+    - name: Executable xray
+      run: chmod +x ./xray
+      working-directory: ./xray
+
     - name: Build Docker Image
       run: docker build -t quay.io/dlysy/xray:cloud .
       working-directory: ./xray
