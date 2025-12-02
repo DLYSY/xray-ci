@@ -1,11 +1,8 @@
-FROM teddysun/xray:latest
+FROM scratch
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
-    apk add python3
+ADD ./target/x86_64-unknown-linux-musl/release/xray-init /xray-init
+ADD ./Xray-linux-64/xray /xray
 
-ADD ./generate_config.py /app/generate_config.py
-ADD ./run.sh /app/run.sh
+WORKDIR /
 
-WORKDIR /app
-
-CMD ["/bin/sh", "/app/run.sh"]
+CMD ["/xray-init"]

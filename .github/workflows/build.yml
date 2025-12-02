@@ -11,7 +11,35 @@ jobs:
   build-xray:
     runs-on: ubuntu-latest
     steps:
+    - name: install musl
+      run: |
+        sudo apt install musl-tools -y
+        rustup target add x86_64-unknown-linux-musl
+    
+    # - name: add_target
+    #   run: rustup target add x86_64-unknown-linux-musl
+
     - uses: actions/checkout@v5
+
+    - name: Build
+      run: cargo build --target x86_64-unknown-linux-musl --release
+      working-directory: ./xray
+
+    - name: Download xray
+      shell: python
+      working-directory: ./xray
+      run: |
+        import requests
+        import zipfile
+        req = requests.get("https://api.github.com/repos/XTLS/Xray-core/releases/latest")
+
+        linux_asset_url = next(filter(lambda x: x["name"] == "Xray-linux-64.zip",req.json()["assets"]))["browser_download_url"]
+
+        with open("Xray-linux-64.zip","wb") as f:
+            f.write(requests.get(linux_asset_url).content)
+
+        with zipfile.ZipFile("Xray-linux-64.zip","r") as f:
+            f.extractall(".")
 
     - name: Build Docker Image
       run: docker build -t quay.io/dlysy/xray:cloud .
