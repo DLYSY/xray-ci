@@ -81,4 +81,4 @@ jobs:
         password: ${{ secrets.QUAY_PASSWORD }}
 
     - name: Push to Quay
-      run: docker push quay.io/dlysy/darkhttpd:web
+      run: docker push quay.io/dlysy/darkhttpd:latest
