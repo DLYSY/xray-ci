@@ -1,10 +1,8 @@
-FROM busybox
+FROM scratch
 
-ADD ./target/x86_64-unknown-linux-musl/release/xray-init /app/xray-init
-ADD ./xray /app/xray
-
-# RUN chmod +x /app/xray
+ADD ./target/x86_64-unknown-linux-musl/release/xray-init /xray-init
+ADD ./xray /xray
 
 WORKDIR /app
 
-CMD ["/app/xray-init"]
+CMD ["/xray-init"]
