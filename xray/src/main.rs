@@ -1,9 +1,5 @@
 use serde_json::json;
-use std::{
-    env, fs,
-    os::unix::{fs::PermissionsExt, process::CommandExt},
-    process::Command,
-};
+use std::{env, fs, os::unix::process::CommandExt, process::Command};
 
 fn main() -> Result<(), String> {
     let client_id = env::var("CLIENT_ID").map_err(|_| "找不到 CLIENT_ID 环境变量".to_string())?;
