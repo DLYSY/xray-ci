@@ -3,13 +3,15 @@ use std::{env, fs, os::unix::process::CommandExt, process::Command};
 
 fn main() -> Result<(), String> {
     let client_id = env::var("CLIENT_ID").map_err(|_| "找不到 CLIENT_ID 环境变量".to_string())?;
+    let decryption =
+        env::var("DECRYPTION").map_err(|_| "找不到 DECRYPTION 环境变量".to_string())?;
     let config_json = json!({
         "inbounds": [
             {
                 "port": 80,
                 "listen": "0.0.0.0",
                 "protocol": "vless",
-                "settings": {"clients": [{"id": client_id}], "decryption": "none"},
+                "settings": {"clients": [{"id": client_id}], "decryption": decryption},
                 "streamSettings": {"network": "xhttp", "security": "none"},
                 "xhttpSettings": {"path": "/", "mode": "stream-up"},
             }
