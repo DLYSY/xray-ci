@@ -19,22 +19,24 @@ jobs:
         sudo apt install musl-tools -y
         rustup target add x86_64-unknown-linux-musl
         cargo build --target x86_64-unknown-linux-musl --release
+        wget $(curl https://api.github.com/repos/XTLS/Xray-core/releases/latest | jq '.assets.[] | select(.name == "Xray-linux-64.zip") | .browser_download_url' -r)
+        unzip Xray-linux-64.zip
       
-    - name: Download xray
-      shell: python
-      working-directory: ./xray
-      run: |
-        import requests
-        import zipfile
-        req = requests.get("https://api.github.com/repos/XTLS/Xray-core/releases/latest")
+    # - name: Download xray
+    #   shell: python
+    #   working-directory: ./xray
+    #   run: |
+    #     import requests
+    #     import zipfile
+    #     req = requests.get("https://api.github.com/repos/XTLS/Xray-core/releases/latest")
 
-        linux_asset_url = next(filter(lambda x: x["name"] == "Xray-linux-64.zip",req.json()["assets"]))["browser_download_url"]
+    #     linux_asset_url = next(filter(lambda x: x["name"] == "Xray-linux-64.zip",req.json()["assets"]))["browser_download_url"]
 
-        with open("Xray-linux-64.zip","wb") as f:
-            f.write(requests.get(linux_asset_url).content)
+    #     with open("Xray-linux-64.zip","wb") as f:
+    #         f.write(requests.get(linux_asset_url).content)
 
-        with zipfile.ZipFile("Xray-linux-64.zip","r") as f:
-            f.extractall(".")
+    #     with zipfile.ZipFile("Xray-linux-64.zip","r") as f:
+    #         f.extractall(".")
 
     - name: Build Docker Image
       working-directory: ./xray
