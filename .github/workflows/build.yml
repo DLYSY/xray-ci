@@ -13,7 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
-    - name: Build
+    - name: Quay login
+      uses: docker/login-action@v2
+      with:
+        registry: quay.io
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_PASSWORD }}
+
+    - name: Build and push
       working-directory: ./xray
       run: |
         sudo apt install musl-tools -y
@@ -21,48 +28,15 @@ jobs:
         cargo build --target x86_64-unknown-linux-musl --release
         wget $(curl https://api.github.com/repos/XTLS/Xray-core/releases/latest | jq '.assets.[] | select(.name == "Xray-linux-64.zip") | .browser_download_url' -r)
         unzip Xray-linux-64.zip
-      
-    # - name: Download xray
-    #   shell: python
-    #   working-directory: ./xray
-    #   run: |
-    #     import requests
-    #     import zipfile
-    #     req = requests.get("https://api.github.com/repos/XTLS/Xray-core/releases/latest")
-
-    #     linux_asset_url = next(filter(lambda x: x["name"] == "Xray-linux-64.zip",req.json()["assets"]))["browser_download_url"]
-
-    #     with open("Xray-linux-64.zip","wb") as f:
-    #         f.write(requests.get(linux_asset_url).content)
-
-    #     with zipfile.ZipFile("Xray-linux-64.zip","r") as f:
-    #         f.extractall(".")
-
-    - name: Build Docker Image
-      working-directory: ./xray
-      run: |
         chmod +x ./xray
         docker build -t quay.io/dlysy/xray:cloud .
-
-    - name: Quay login
-      uses: docker/login-action@v2
-      with:
-        registry: quay.io
-        username: ${{ secrets.QUAY_USERNAME }}
-        password: ${{ secrets.QUAY_PASSWORD }}
-
-    - name: Push to Quay
-      run: docker push quay.io/dlysy/xray:cloud
+        docker push quay.io/dlysy/xray:cloud
 
   v2rayn:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
 
-    - name: Build Docker Image
-      run: docker build -t quay.io/dlysy/v2rayn:sway .
-      working-directory: ./v2rayn
-
     - name: Quay login
       uses: docker/login-action@v2
       with:
@@ -70,8 +44,11 @@ jobs:
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}
 
-    - name: Push to Quay
-      run: docker push quay.io/dlysy/v2rayn:sway
+    - name: Build and push
+      working-directory: ./v2rayn
+      run: |
+        docker build -t quay.io/dlysy/v2rayn:sway .
+        docker push quay.io/dlysy/v2rayn:sway
 
 
   build-darkhttpd:
@@ -81,9 +58,6 @@ jobs:
       with:
         repository: 'emikulic/darkhttpd'
 
-    - name: Build Docker Image
-      run: docker build -t quay.io/dlysy/darkhttpd:latest .
-
     - name: Quay login
       uses: docker/login-action@v2
       with:
@@ -91,5 +65,7 @@ jobs:
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}
 
-    - name: Push to Quay
-      run: docker push quay.io/dlysy/darkhttpd:latest
+    - name: Build and push
+      run: |
+        docker build -t quay.io/dlysy/darkhttpd:latest .
+        docker push quay.io/dlysy/darkhttpd:latest

@@ -9,6 +9,7 @@ fn main() -> Result<(), String> {
     } else {
         "xtls-rprx-vision"
     };
+    let xhttp_mode = env::var("XTTP_MODE").unwrap_or("stream-up".to_string());
 
     let config_json = json!({
         "inbounds": [
@@ -18,7 +19,7 @@ fn main() -> Result<(), String> {
                 "protocol": "vless",
                 "settings": {"clients": [{"id": client_id, "flow": flow}], "decryption": decryption},
                 "streamSettings": {"network": "xhttp", "security": "none"},
-                "xhttpSettings": {"path": "/", "mode": "stream-up"},
+                "xhttpSettings": {"path": "/", "mode": xhttp_mode},
             }
         ],
         "outbounds": [{"protocol": "freedom"}],
