@@ -11,10 +11,10 @@ jobs:
   build-xray:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
 
     - name: Quay login
-      uses: docker/login-action@v2
+      uses: docker/login-action@v4
       with:
         registry: quay.io
         username: ${{ secrets.QUAY_USERNAME }}
@@ -35,10 +35,10 @@ jobs:
   v2rayn:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
 
     - name: Quay login
-      uses: docker/login-action@v2
+      uses: docker/login-action@v4
       with:
         registry: quay.io
         username: ${{ secrets.QUAY_USERNAME }}
@@ -54,12 +54,12 @@ jobs:
   build-darkhttpd:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
       with:
         repository: 'emikulic/darkhttpd'
 
     - name: Quay login
-      uses: docker/login-action@v2
+      uses: docker/login-action@v4
       with:
         registry: quay.io
         username: ${{ secrets.QUAY_USERNAME }}
